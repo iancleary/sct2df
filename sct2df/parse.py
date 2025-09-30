@@ -15,12 +15,12 @@ def parse_symbol_definition(line: str, reference_designator: str):
 
     pin_definiton_dict = {}
 
-    # (2:JTAG_TDI),(8:ARRAY_CONTROL_DATA),...
+    # (2:PIN_2),(8:PIN_8),...
     for definiton in trimmed_line.split(","):
-        # (2:JTAG_TDI)
+        # (2:PIN_2)
         definition_without_parentheses = definiton.replace("(", "").replace(")", "")
 
-        # 2,JTAG_TDI tuple no longer with parentheses
+        # 2,PIN_2 tuple no longer with parentheses
         (pin_number, pin_name) = definition_without_parentheses.split(":")
 
         # add to defintion dictionary
@@ -31,8 +31,8 @@ def parse_symbol_definition(line: str, reference_designator: str):
     sorted_pin_definiton_dict = collections.OrderedDict(
         [(x, pin_definiton_dict[str(x)]) for x in key_list]
     )
-    print(key_list)
-    print(sorted_pin_definiton_dict)
+    # print(key_list)
+    # print(sorted_pin_definiton_dict)
     return sorted_pin_definiton_dict
 
 
@@ -51,27 +51,27 @@ def to_record_list(path: Path, symbols: List[str]):
 
     # make definitions of symbols
     for key, value in symbol_of_interest_line_dict.items():
-        print("\n\n\n")
-        print(key)
+        # print("\n\n\n")
+        # print(key)
         for line in value:
             if key in symbols:
                 if line.startswith(f"{key}("):
-                    print("\n\ndefinition\n\n")
-                    print(line, end="")
+                    # print("\n\ndefinition\n\n")
+                    # print(line, end="")
 
-                    print("\n\ntrimmed_line\n\n")
+                    # print("\n\ntrimmed_line\n\n")
 
                     pin_definitions = parse_symbol_definition(
                         line, reference_designator=key
                     )
                     symbol_of_interest_definition_dict[key] = pin_definitions
 
-    print(symbol_of_interest_definition_dict.keys())
-    for ref_des, pin_definitions in symbol_of_interest_definition_dict.items():
-        print("")
-        print(f"{ref_des} symbol definition")
-        for pin_number, pin_name in pin_definitions.items():
-            print(f"{pin_number}: {pin_name}")
+    # print(symbol_of_interest_definition_dict.keys())
+    # for ref_des, pin_definitions in symbol_of_interest_definition_dict.items():
+    #     print("")
+    #     print(f"{ref_des} symbol definition")
+    #     for pin_number, pin_name in pin_definitions.items():
+    #         print(f"{pin_number}: {pin_name}")
 
     # symbol = "CF1"
 
@@ -79,12 +79,12 @@ def to_record_list(path: Path, symbols: List[str]):
     for symbol in symbols:
         symbol_net_dict[symbol] = {}
         for line in symbol_of_interest_line_dict[symbol]:
-            print(line, end="")
+            # print(line, end="")
 
             # split only on fist occurence
             net, connections_string = line.split(":", 1)
-            print(net)
-            print(connections_string)
+            # print(net)
+            # print(connections_string)
 
             connections_list = connections_string.split(",")
 
@@ -96,11 +96,11 @@ def to_record_list(path: Path, symbols: List[str]):
                     )
                     symbol_net_dict[symbol][int(symbol_pin_number)] = net
 
-    for symbol, connection_dict in symbol_net_dict.items():
-        for pin_number_string, net in connection_dict.items():
-            print(
-                f"{symbol}, {pin_number_string}, {symbol_of_interest_definition_dict[symbol][int(pin_number_string)]}, {net}"
-            )
+    # for symbol, connection_dict in symbol_net_dict.items():
+    #     for pin_number_string, net in connection_dict.items():
+    #         print(
+    #             f"{symbol}, {pin_number_string}, {symbol_of_interest_definition_dict[symbol][int(pin_number_string)]}, {net}"
+    #         )
 
     df_record_list = []
     for symbol in symbols:
@@ -117,6 +117,6 @@ def to_record_list(path: Path, symbols: List[str]):
                 "net": net,
             }
             df_record_list.append(record)
-            print(record)
+            # print(record)
 
     return df_record_list

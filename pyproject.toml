@@ -1,0 +1,34 @@
+[project]
+name = "sct2df"
+version = "0.1.0"
+description = "Python library for converting SCT Netlist text files to DataFrames"
+readme = { file = "README.md", content-type = "text/markdown" }
+maintainers = [{ name = "Ian Cleary", email = "python@iancleary.me" }]
+license = "MIT"
+requires-python = ">=3.13"
+
+# only hard dependency is the wrapper for the VISA standard wrapper
+dependencies = [
+]
+
+# https://peps.python.org/pep-0735/
+# covers dependency groups and optional dependencies
+[project.optional-dependencies]
+full = [
+    "pandas", # DataFrame backend
+]
+# alias ip to tcpip
+pandas = [
+    "pandas", # DataFrame backend
+]
+polars = [
+    "polars", # DataFrame backend, written in rust
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.13.1",
+    "pandas>=2.3.2",
+    "pre-commit>=4.3.0",
+    "pytest>=8.4.2",
+]
